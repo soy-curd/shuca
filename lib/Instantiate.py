@@ -11,15 +11,15 @@ class Instantiate:
     def ReadDictionary(self, dict_path):
         f = open(dict_path, 'r')
         for line in f.readlines():
-            line = unicode(line, 'UTF-8')
+            line = str(line, 'UTF-8')
             line = line.rstrip()
-            (feature, weight) = line.split(u'\t')
+            (feature, weight) = line.split('\t')
             self.dict[feature] = weight
 
     def CalculateSentenceWeights(self, features):
         for feature in features:
             score = 0
-            for key, value in feature.items():
+            for key, value in list(feature.items()):
                 if key in self.dict:
                     score = score + float(value) * float(self.dict[key])
             self.sentence_weights.append(score)

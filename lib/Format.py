@@ -10,4 +10,4 @@ class Format:
     def FormatSummary(self):
         for i in range(0, len(self.solution)):
             if self.solution[i] == True:
-                print self.sentences[i].encode('utf-8')
+                print(self.sentences[i].encode('utf-8'))

@@ -17,13 +17,13 @@ class ExtractFeature:
         self.lines     = []
         self.n         = 0
 
-        self.c_pattern = re.compile(u'^名詞|^動詞|^形容詞')
-        self.s_pattern = re.compile(u'^\#')
-        self.b_pattern = re.compile(u'^\*')
-        self.p_pattern = re.compile(u'^\+')
-        self.e_pattern = re.compile(u'^EOS')
-        self.w_pattern = re.compile(u'^(\S+) (\S+) (\S+) (\S+) ')
-        self.n_pattern = re.compile(u'^.+NE:(\S+?):')
+        self.c_pattern = re.compile('^名詞|^動詞|^形容詞')
+        self.s_pattern = re.compile('^\#')
+        self.b_pattern = re.compile('^\*')
+        self.p_pattern = re.compile('^\+')
+        self.e_pattern = re.compile('^EOS')
+        self.w_pattern = re.compile('^(\S+) (\S+) (\S+) (\S+) ')
+        self.n_pattern = re.compile('^.+NE:(\S+?):')
     
         self.ReadInput()
         self.ExtractFeatureVector()
@@ -31,7 +31,7 @@ class ExtractFeature:
     def ReadInput(self):
 
         for line in sys.stdin:
-            line = unicode(line, 'UTF-8')
+            line = str(line, 'UTF-8')
             line = line.rstrip()
             self.lines.append(line)
 
@@ -62,21 +62,21 @@ class ExtractFeature:
             e_match = self.e_pattern.match(line)
    
             if s_match:
-                self.features[i][u'tf'] = term_freq
+                self.features[i]['tf'] = term_freq
                 term_freq = 0
                 i = i + 1
                 self.features.append({})
                 self.lengths.append('')
                 self.sentences.append('')
                 if i == 1:
-                    self.features[i][u'is_lead'] = 1
+                    self.features[i]['is_lead'] = 1
             elif b_match:
                 pass
             elif p_match:
                 n_match = self.n_pattern.match(line)
                 if n_match:
                     ne_type = n_match.group(1)
-                    self.features[i][u'n:%s' % (ne_type)] = 1
+                    self.features[i]['n:%s' % (ne_type)] = 1
             elif e_match:
                 if self.length_by_sentence is True:
                     self.lengths[i] = 1
@@ -89,16 +89,16 @@ class ExtractFeature:
                     pos     = w_match.group(4)
                     self.sentences[i] = self.sentences[i] + surface
 
-                    self.features[i][u'abs_pos'] = i
-                    self.features[i][u'rel_pos'] = float(i) / self.n
-                    self.features[i][u's:%s' % (surface)] = 1
+                    self.features[i]['abs_pos'] = i
+                    self.features[i]['rel_pos'] = float(i) / self.n
+                    self.features[i]['s:%s' % (surface)] = 1
                     
                     c_match = self.c_pattern.match(pos)
                     if c_match != None:
                         term_freq = term_freq + self.term_dic[surface]
     
-        self.features[i][u'is_last'] = 1
-        self.features[i][u'tf']      = term_freq
+        self.features[i]['is_last'] = 1
+        self.features[i]['tf']      = term_freq
         
     def GetFeatures(self):
         return self.features
@@ -119,6 +119,6 @@ if __name__ == '__main__':
     ef = ExtractFeature()
     features, lengths, n, sentences = ef.GetResults()
     for i in range(0, len(sentences)):
-        print '%d %s %d' % (i, sentences[i], lengths[i])
-        for key, value in features[i].items():
-            print '%s %f' % (key, value)
+        print('%d %s %d' % (i, sentences[i], lengths[i]))
+        for key, value in list(features[i].items()):
+            print('%s %f' % (key, value))
