@@ -24,14 +24,15 @@ class ExtractFeature:
         self.e_pattern = re.compile('^EOS')
         self.w_pattern = re.compile('^(\S+) (\S+) (\S+) (\S+) ')
         self.n_pattern = re.compile('^.+NE:(\S+?):')
-    
+
         self.ReadInput()
         self.ExtractFeatureVector()
 
     def ReadInput(self):
 
         for line in sys.stdin:
-            line = str(line, 'UTF-8')
+            # TODO: change to utf-8
+            line = str(line)
             line = line.rstrip()
             self.lines.append(line)
 
@@ -55,12 +56,12 @@ class ExtractFeature:
         term_freq = 0
 
         for line in self.lines:
-            
+
             s_match = self.s_pattern.match(line)
             b_match = self.b_pattern.match(line)
             p_match = self.p_pattern.match(line)
             e_match = self.e_pattern.match(line)
-   
+
             if s_match:
                 self.features[i]['tf'] = term_freq
                 term_freq = 0
@@ -92,23 +93,23 @@ class ExtractFeature:
                     self.features[i]['abs_pos'] = i
                     self.features[i]['rel_pos'] = float(i) / self.n
                     self.features[i]['s:%s' % (surface)] = 1
-                    
+
                     c_match = self.c_pattern.match(pos)
                     if c_match != None:
                         term_freq = term_freq + self.term_dic[surface]
-    
+
         self.features[i]['is_last'] = 1
         self.features[i]['tf']      = term_freq
-        
+
     def GetFeatures(self):
         return self.features
-    
+
     def GetLengths(self):
         return self.lengths
-    
+
     def GetN(self):
         return self.n
-    
+
     def GetSentences(self):
         return self.sentences
 

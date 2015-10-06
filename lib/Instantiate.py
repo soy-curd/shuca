@@ -11,7 +11,8 @@ class Instantiate:
     def ReadDictionary(self, dict_path):
         f = open(dict_path, 'r')
         for line in f.readlines():
-            line = str(line, 'UTF-8')
+            # TODO: change to utf-8
+            line = str(line)
             line = line.rstrip()
             (feature, weight) = line.split('\t')
             self.dict[feature] = weight
