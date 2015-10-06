@@ -1,10 +1,6 @@
 # Directories
-dat/
-dic/
-libexec/
 release/
 tmp/
 
 # Files
 *.pyc
-
